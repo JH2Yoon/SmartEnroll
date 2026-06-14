@@ -35,11 +35,13 @@ public class Course {
     private Integer currentCount;
 
     // 수강신청
+    @Builder.Default
     @OneToMany(mappedBy = "course")
     private List<Registration> registrations = new ArrayList<>();
 
     // 강의 시간
-    @OneToMany(mappedBy = "course")
+    @Builder.Default
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LectureTime> lectureTimes = new ArrayList<>();
 
     public boolean isFull() {
@@ -49,4 +51,6 @@ public class Course {
     public void increaseCount() {
         this.currentCount++;
     }
+
+    public void decreaseCurrentCount() {this.currentCount--;}
 }

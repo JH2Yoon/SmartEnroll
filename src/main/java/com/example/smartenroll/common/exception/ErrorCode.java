@@ -20,7 +20,11 @@ public enum ErrorCode {
     // TOKEN
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, "A002", "토큰이 만료되었습니다."),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "A003", "유효하지 않은 토큰입니다."),
-    STUDENT_ALREADY_EXISTS(HttpStatus.CONFLICT, "STUDENT_409", "이미 등록된 학번입니다.");
+    STUDENT_ALREADY_EXISTS(HttpStatus.CONFLICT, "STUDENT_409", "이미 등록된 학번입니다."),
+
+    // COURSE
+    COURSE_ALREADY_EXISTS(HttpStatus.CONFLICT, "C001", "이미 존재하는 강의입니다."),
+    COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "C002", "존재하지 않는 강의입니다.");
 
     private final HttpStatus status;
     private final String code;
