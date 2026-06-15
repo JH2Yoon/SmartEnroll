@@ -40,6 +40,7 @@ class SecurityConfig {
                                 "/v1/members/refresh"
                         ).permitAll()
                         .requestMatchers("/v1/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/v1/registrations").hasRole("STUDENT")
                         .anyRequest().authenticated()
                 )
 

@@ -24,7 +24,11 @@ public enum ErrorCode {
 
     // COURSE
     COURSE_ALREADY_EXISTS(HttpStatus.CONFLICT, "C001", "이미 존재하는 강의입니다."),
-    COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "C002", "존재하지 않는 강의입니다.");
+    COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "C002", "존재하지 않는 강의입니다."),
+    COURSE_FULL(HttpStatus.BAD_REQUEST, "C003", "정원이 가득 찬 강의입니다."),
+
+    // Registration
+    ALREADY_REGISTERED(HttpStatus.CONFLICT, "R001", "이미 신청한 강의입니다.");
 
     private final HttpStatus status;
     private final String code;
