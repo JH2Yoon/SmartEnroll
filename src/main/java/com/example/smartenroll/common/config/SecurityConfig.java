@@ -5,6 +5,7 @@ import com.example.smartenroll.common.jwt.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -39,9 +40,25 @@ class SecurityConfig {
                                 "/v1/members/login",
                                 "/v1/members/refresh"
                         ).permitAll()
-                        .requestMatchers("/v1/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/v1/registrations").hasRole("STUDENT")
-                        .anyRequest().authenticated()
+
+                        .requestMatchers("/v1/admin/**")
+                        .hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/v1/courses"
+                        ).hasRole("ADMIN")
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/v1/courses/**"
+                        ).hasAnyRole("ADMIN", "STUDENT")
+
+                        .requestMatchers("/v1/registrations/**")
+                        .hasRole("STUDENT")
+
+                        .anyRequest()
+                        .authenticated()
                 )
 
                 .addFilterBefore(

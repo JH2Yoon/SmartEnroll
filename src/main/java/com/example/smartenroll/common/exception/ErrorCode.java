@@ -28,7 +28,8 @@ public enum ErrorCode {
     COURSE_FULL(HttpStatus.BAD_REQUEST, "C003", "정원이 가득 찬 강의입니다."),
 
     // Registration
-    ALREADY_REGISTERED(HttpStatus.CONFLICT, "R001", "이미 신청한 강의입니다.");
+    ALREADY_REGISTERED(HttpStatus.CONFLICT, "R001", "이미 신청한 강의입니다."),
+    TIMETABLE_CONFLICT(HttpStatus.CONFLICT, "R002", "수업 시간이 겹칩니다.");
 
     private final HttpStatus status;
     private final String code;
