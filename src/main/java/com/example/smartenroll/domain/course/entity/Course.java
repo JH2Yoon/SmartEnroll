@@ -1,5 +1,7 @@
 package com.example.smartenroll.domain.course.entity;
 
+import com.example.smartenroll.common.exception.CustomException;
+import com.example.smartenroll.common.exception.ErrorCode;
 import com.example.smartenroll.domain.lectureTime.entity.LectureTime;
 import com.example.smartenroll.domain.registration.entity.Registration;
 import jakarta.persistence.*;
@@ -52,5 +54,10 @@ public class Course {
         this.currentCount++;
     }
 
-    public void decreaseCurrentCount() {this.currentCount--;}
+    public void decreaseCurrentCount() {
+        if (currentCount <= 0) {
+            throw new CustomException(ErrorCode.INVALID_CURRENT_COUNT);
+        }
+        currentCount--;
+    }
 }

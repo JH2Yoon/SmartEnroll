@@ -26,10 +26,14 @@ public enum ErrorCode {
     COURSE_ALREADY_EXISTS(HttpStatus.CONFLICT, "C001", "이미 존재하는 강의입니다."),
     COURSE_NOT_FOUND(HttpStatus.NOT_FOUND, "C002", "존재하지 않는 강의입니다."),
     COURSE_FULL(HttpStatus.BAD_REQUEST, "C003", "정원이 가득 찬 강의입니다."),
+    INVALID_CURRENT_COUNT(HttpStatus.BAD_REQUEST,"C004","현재 수강 인원이 올바르지 않습니다."),
 
     // Registration
     ALREADY_REGISTERED(HttpStatus.CONFLICT, "R001", "이미 신청한 강의입니다."),
-    TIMETABLE_CONFLICT(HttpStatus.CONFLICT, "R002", "수업 시간이 겹칩니다.");
+    TIMETABLE_CONFLICT(HttpStatus.CONFLICT, "R002", "수업 시간이 겹칩니다."),
+    REGISTRATION_NOT_FOUND(HttpStatus.NOT_FOUND, "R003", "수강 신청 내역을 찾을 수 없습니다."),
+    REGISTRATION_FORBIDDEN(HttpStatus.FORBIDDEN, "R004", "해당 수강 신청에 대한 권한이 없습니다.");
+
 
     private final HttpStatus status;
     private final String code;

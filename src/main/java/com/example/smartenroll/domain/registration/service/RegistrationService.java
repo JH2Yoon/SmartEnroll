@@ -8,6 +8,7 @@ import com.example.smartenroll.domain.lectureTime.entity.LectureTime;
 import com.example.smartenroll.domain.member.entity.Member;
 import com.example.smartenroll.domain.member.repository.MemberRepository;
 import com.example.smartenroll.domain.registration.dto.request.RegistrationRequest;
+import com.example.smartenroll.domain.registration.dto.response.RegistrationResponse;
 import com.example.smartenroll.domain.registration.entity.Registration;
 import com.example.smartenroll.domain.registration.repository.RegistrationRepository;
 import jakarta.transaction.Transactional;
@@ -77,5 +78,37 @@ public class RegistrationService {
         return a.getDayOfWeek() == b.getDayOfWeek()
                 && a.getStartTime().isBefore(b.getEndTime())
                 && b.getStartTime().isBefore(a.getEndTime());
+    }
+
+    public void cancel(Long memberId, Long registrationId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        Registration registration = registrationRepository.findById(registrationId).orElseThrow(() ->
+                new CustomException(ErrorCode.REGISTRATION_NOT_FOUND));
+
+        if(!registration.getMember().getId().equals(member.getId())) {
+            throw new CustomException(ErrorCode.REGISTRATION_FORBIDDEN);
+        }
+
+        registration.getCourse().decreaseCurrentCount();
+
+        registrationRepository.delete(registration);
+    }
+
+    public List<RegistrationResponse> getMyCourses(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new CustomException(ErrorCode.MEMBER_NOT_FOUND));
+
+        return registrationRepository.findAllByMember(member)
+                .stream()
+                .map(registration ->
+                        RegistrationResponse.builder()
+                                .registrationId(registration.getId())
+                            .courseCode(registration.getCourse().getCourseCode())
+                            .title(registration.getCourse().getTitle()
+                            ).build()
+                )
+                .toList();
     }
 }
