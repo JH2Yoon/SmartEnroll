@@ -7,7 +7,6 @@ import com.example.smartenroll.domain.course.repository.CourseRepository;
 import com.example.smartenroll.domain.lectureTime.entity.LectureTime;
 import com.example.smartenroll.domain.member.entity.Member;
 import com.example.smartenroll.domain.member.repository.MemberRepository;
-import com.example.smartenroll.domain.registration.dto.request.RegistrationRequest;
 import com.example.smartenroll.domain.registration.dto.response.RegistrationResponse;
 import com.example.smartenroll.domain.registration.entity.Registration;
 import com.example.smartenroll.domain.registration.repository.RegistrationRepository;
@@ -25,11 +24,11 @@ public class RegistrationService {
     private final MemberRepository memberRepository;
     private final CourseRepository courseRepository;
 
-    public void register(Long memberId, RegistrationRequest request) {
+    public void register(Long memberId, Long courseId) {
         Member member = memberRepository.findById(memberId).orElseThrow(() ->
                 new CustomException(ErrorCode.MEMBER_NOT_FOUND));
 
-        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(() ->
+        Course course = courseRepository.findByIdWithLock(courseId).orElseThrow(() ->
                 new CustomException(ErrorCode.COURSE_NOT_FOUND));
 
 
@@ -68,10 +67,10 @@ public class RegistrationService {
                         .course(course)
                         .build();
 
-        registrationRepository.save(registration);
-
         // 3. 신청 인원 증가
         course.increaseCount();
+
+        registrationRepository.save(registration);
     }
 
     private boolean isConflict(LectureTime a, LectureTime b) {

@@ -1,6 +1,5 @@
 package com.example.smartenroll.domain.registration.controller;
 
-import com.example.smartenroll.domain.registration.dto.request.RegistrationRequest;
 import com.example.smartenroll.domain.registration.dto.response.RegistrationResponse;
 import com.example.smartenroll.domain.registration.service.RegistrationService;
 import lombok.RequiredArgsConstructor;
@@ -19,10 +18,10 @@ public class RegistrationController {
 
     // 수강신청
     @PostMapping
-    public ResponseEntity<Void> register(Authentication authentication, @RequestBody RegistrationRequest request) {
+    public ResponseEntity<Void> register(Authentication authentication, @PathVariable Long courseId) {
 
         Long memberId = (Long) authentication.getPrincipal();
-        registrationService.register(memberId, request);
+        registrationService.register(memberId, courseId);
 
         return ResponseEntity.ok().build();
     }
@@ -40,7 +39,7 @@ public class RegistrationController {
 
     // 내 수강목록 조회
     @GetMapping("/me")
-    public ResponseEntity<List<RegistrationResponse>> getMyCourses (Authentication authentication) {
+    public ResponseEntity<List<RegistrationResponse>> getMyCourses(Authentication authentication) {
 
         Long memberId = (Long) authentication.getPrincipal();
 
