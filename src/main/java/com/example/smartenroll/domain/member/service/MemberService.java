@@ -16,9 +16,12 @@ import com.example.smartenroll.domain.student.entity.StudentMaster;
 import com.example.smartenroll.domain.student.repository.StudentMasterRepository;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -28,6 +31,7 @@ public class MemberService {
     private final StudentMasterRepository studentMasterRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
+    private final RedisTemplate<String, String> redisTemplate;
 
     @Transactional
     public SignupResponse signup(SignupRequest request) {
@@ -74,6 +78,13 @@ public class MemberService {
                         member.getId()
                 );
 
+        redisTemplate.opsForValue().set(
+                "RT:" + member.getId(),
+                refreshToken,
+                7,
+                TimeUnit.DAYS
+        );
+
         return new LoginResponse(
                 accessToken,
                 refreshToken,
@@ -92,6 +103,17 @@ public class MemberService {
         Long memberId =
                 Long.valueOf(claims.getSubject());
 
+        String savedToken =
+                redisTemplate.opsForValue().get(
+                        "RT:" + memberId
+                );
+
+        if (savedToken == null ||
+                !savedToken.equals(request.getRefreshToken())) {
+
+            throw new CustomException(ErrorCode.INVALID_TOKEN);
+        }
+
         Member member =
                 memberRepository.findById(memberId)
                         .orElseThrow(
@@ -107,5 +129,12 @@ public class MemberService {
                 );
 
         return new TokenResponse(accessToken);
+    }
+
+    @Transactional
+    public void logout(Long memberId) {
+        redisTemplate.delete(
+                "RT:" + memberId
+        );
     }
 }
