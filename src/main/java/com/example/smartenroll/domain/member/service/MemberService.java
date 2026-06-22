@@ -54,7 +54,7 @@ public class MemberService {
 
         memberRepository.save(member);
 
-        return new SignupResponse(member.getUsername(), student.getStudentNo());
+        return new SignupResponse(student.getName(), student.getStudentNo());
     }
 
     @Transactional(readOnly = true)
