@@ -1,5 +1,7 @@
 package com.example.smartenroll.domain.course.entity;
 
+import com.example.smartenroll.common.exception.CustomException;
+import com.example.smartenroll.common.exception.ErrorCode;
 import com.example.smartenroll.domain.lectureTime.entity.LectureTime;
 import com.example.smartenroll.domain.registration.entity.Registration;
 import jakarta.persistence.*;
@@ -35,11 +37,13 @@ public class Course {
     private Integer currentCount;
 
     // 수강신청
+    @Builder.Default
     @OneToMany(mappedBy = "course")
     private List<Registration> registrations = new ArrayList<>();
 
     // 강의 시간
-    @OneToMany(mappedBy = "course")
+    @Builder.Default
+    @OneToMany(mappedBy = "course", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LectureTime> lectureTimes = new ArrayList<>();
 
     public boolean isFull() {
@@ -48,5 +52,12 @@ public class Course {
 
     public void increaseCount() {
         this.currentCount++;
+    }
+
+    public void decreaseCurrentCount() {
+        if (currentCount <= 0) {
+            throw new CustomException(ErrorCode.INVALID_CURRENT_COUNT);
+        }
+        currentCount--;
     }
 }
