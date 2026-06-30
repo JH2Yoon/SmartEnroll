@@ -39,6 +39,7 @@ public class Member extends Timestamped {
     private StudentMaster studentMaster;
 
     // 선택적 (조회용)
+    @Builder.Default
     @OneToMany(mappedBy = "member")
     private List<Registration> registrations = new ArrayList<>();
 
