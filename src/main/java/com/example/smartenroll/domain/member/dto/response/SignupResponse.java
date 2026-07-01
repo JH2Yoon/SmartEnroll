@@ -1,9 +1,11 @@
 package com.example.smartenroll.domain.member.dto.response;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import lombok.Builder;
 import lombok.Getter;
 
 @Getter
+@Builder
 public class SignupResponse {
 
     @Schema(description = "이름")
