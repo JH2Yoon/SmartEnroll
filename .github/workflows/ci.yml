@@ -29,12 +29,6 @@ jobs:
         ports:
           - 3306:3306
 
-        options: >-
-          --health-cmd="mysqladmin ping -h127.0.0.1 -uroot -p${{ secrets.DB_PASSWORD }}"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=10
-
       redis:
         image: redis:7
 
@@ -57,7 +51,7 @@ jobs:
 
       JWT_SECRET: ${{ secrets.JWT_SECRET }}
       ADMIN_KEY: ${{ secrets.ADMIN_KEY }}
-
+  
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -71,6 +65,6 @@ jobs:
 
       - name: Grant execute permission
         run: chmod +x gradlew
-
+      
       - name: Build & Test
         run: ./gradlew clean build
